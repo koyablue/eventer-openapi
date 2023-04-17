@@ -1,0 +1,5 @@
+openapi: 3.0.0
+info:
+  title: Eventer API
+  description: Documentation of Eventer API.
+  version: 1.0.0

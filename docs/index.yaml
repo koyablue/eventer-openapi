@@ -12,13 +12,13 @@ servers:
         enum:
           - localhost
 paths:
-  /register:
+  /users/register:
     post:
       tags:
-        - user
-      summary: ユーザ登録
+        - users
+      summary: User registration
       description: |
-        クライアントが入力する情報をもとにユーザ情報を登録する
+        Register a new user.
       requestBody:
         required: true
         content:
@@ -26,24 +26,20 @@ paths:
             schema:
               type: object
               properties:
-                name:
-                  type: string
-                  example: 山田太郎
                 email:
                   type: string
                   format: email
-                  example: yamada@hoge.hoge
+                  example: test1@example.com
                 password:
                   type: string
                   format: password
                   example: qwerty123456789
               required:
-                - name
                 - email
                 - password
       responses:
-        '200':
-          description: ユーザ情報登録成功
+        '201':
+          description: User registration succeeded
           content:
             application/json:
               schema:
@@ -52,27 +48,23 @@ paths:
                   statusCode:
                     type: integer
                     format: number
-                    example: 200
-                  method:
-                    type: string
-                    example: "POST"
+                    example: 201
                   message:
                     type: string
-                    example: "ユーザ登録に成功しました。"
+                    example: "User registration succeeded"
                   data:
                     type: object
                     properties:
-                      id:
-                        type: integer
-                        example: 1
+                      token:
+                        type: string
+                        example: abc123
                 required:
                   - statusCode
-                  - method
                   - message
                   - data
-        '409':
+        '422':
           description: |
-            登録済みのメールアドレス
+            Validation error
           content:
             application/json:
               schema:
@@ -81,23 +73,27 @@ paths:
                   statusCode:
                     type: integer
                     format: number
-                    example: 409
-                  method:
-                    type: string
-                    example: "POST"
+                    example: 422
                   message:
                     type: string
-                    example: "登録済みのメールアドレスです。"
-                  data: 
+                    example: "Validation error"
+                  data:
                     type: object
-                    example: null
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                          - The email address is already registered.
+                          - The email address must be a valid format.
         '500':
           $ref: '#/components/responses/500Error'
 components:
   responses:
     500Error:
       description: |
-        サーバー上のエラー
+        Server error
       content:
         application/json:
           schema:
@@ -107,12 +103,9 @@ components:
                 type: integer
                 format: int64
                 example: "500"
-              method:
+              message:
                 type: string
-                example: "POST"
-              message: 
-                type: string
-                example: "サーバー側で何らかのエラーが発生しました。"
+                example: "Something went wrong with the server"
               data:
                 type: object
                 example: null

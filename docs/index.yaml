@@ -89,6 +89,98 @@ paths:
                           - The email address must be a valid format.
         '500':
           $ref: '#/components/responses/500Error'
+  /users/:userId:
+    put:
+      tags:
+        - users
+      summary: Update user profile
+      description: |
+        Update user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "John Smith"
+                email:
+                  type: string
+                  format: email
+                  example: test1@example.com
+                password:
+                  type: string
+                  format: password
+                  example: qwerty123456789
+              required:
+                - email
+                - password
+      responses:
+        '204':
+          description: User profile update succeeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    format: number
+                    example: 204
+                  message:
+                    type: string
+                    example: "User profile update succeeded"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      username:
+                        type: string
+                        example: "John Smith"
+                      email:
+                        type: string
+                        format: email
+                        example: test1@example.com
+                      password:
+                        type: string
+                        format: password
+                        example: qwerty123456789
+                required:
+                  - statusCode
+                  - message
+                  - data
+        '422':
+          description: |
+            Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    format: number
+                    example: 422
+                  message:
+                    type: string
+                    example: "Validation error"
+                  data:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                          - Your username should be no more than 100 characters.
+                          - The email address must be a valid format.
+        '500':
+          $ref: '#/components/responses/500Error'
+
 components:
   responses:
     500Error:

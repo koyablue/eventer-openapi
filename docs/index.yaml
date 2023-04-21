@@ -176,11 +176,152 @@ paths:
                         items:
                           type: string
                         example:
+                          - User doesn't exist
+        '500':
+          $ref: '#/components/responses/500Error'
+    delete:
+      tags:
+        - users
+      summary: Delete user
+      description: |
+        Delete user
+      responses:
+        '204':
+          description: User deletion succeeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    format: number
+                    example: 204
+                  message:
+                    type: string
+                    example: "User deletion succeeded"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      username:
+                        type: string
+                        example: "John Smith"
+                      email:
+                        type: string
+                        format: email
+                        example: test1@example.com
+                required:
+                  - statusCode
+                  - message
+                  - data
+        '422':
+          description: |
+            Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    format: number
+                    example: 422
+                  message:
+                    type: string
+                    example: "Validation error"
+                  data:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+                        example:
                           - Your username should be no more than 100 characters.
                           - The email address must be a valid format.
         '500':
           $ref: '#/components/responses/500Error'
-
+  /user/login:
+    post:
+      tags:
+        - users
+      summary: User login
+      description: |
+        User login.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: test1@example.com
+                password:
+                  type: string
+                  format: password
+                  example: qwerty123456789
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User registration succeeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    format: number
+                    example: 200
+                  message:
+                    type: string
+                    example: "User login succeeded"
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: abc123
+                required:
+                  - statusCode
+                  - message
+                  - data
+        '422':
+          description: |
+            Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    format: number
+                    example: 422
+                  message:
+                    type: string
+                    example: "Validation error"
+                  data:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                          - The email address is already registered.
+                          - The email address must be a valid format.
+                          - The password is incorrect.
+        '500':
+          $ref: '#/components/responses/500Error'
 components:
   responses:
     500Error:

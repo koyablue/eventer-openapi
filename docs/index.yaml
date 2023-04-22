@@ -307,7 +307,7 @@ paths:
                           - The email address must be a valid format.
         '500':
           $ref: '#/components/responses/500Error'
-  /user/login:
+  /users/login:
     post:
       tags:
         - users

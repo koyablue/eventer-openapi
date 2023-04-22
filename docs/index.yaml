@@ -12,6 +12,69 @@ servers:
         enum:
           - localhost
 paths:
+  /users/email-verification:
+    post:
+      tags:
+        - users
+      summary: Email address verification
+      description: Email address verification.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: qawsedrftgyhuj1234
+              required:
+                - token
+      responses:
+        '200':
+          description: Email address is verified
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  username:
+                    type: string
+                    example: "John Smith"
+                  email:
+                    type: string
+                    format: email
+                    example: test1@example.com
+        '422':
+          description: |
+            Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    format: number
+                    example: 422
+                  message:
+                    type: string
+                    example: "Validation error"
+                  data:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                          - The token is invalid.
+        '500':
+          $ref: '#/components/responses/500Error'
+
   /users/register:
     post:
       tags:
